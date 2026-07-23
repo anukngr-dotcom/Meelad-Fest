@@ -1,88 +1,192 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Uswathun Hasanah</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uswathun Hasanah</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  transition: 0.3s;
+}
+
+.dark {
+  background: #121212;
+  color: white;
+}
+
+.header {
+  background: linear-gradient(45deg, green, #0a8f3c);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.card {
+  background: white;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  animation: fade 0.4s ease;
+}
+
+.dark .card {
+  background: #1e1e1e;
+}
+
+button.main {
+  width: 100%;
+  padding: 12px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+.tabbar {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #ccc;
+}
+
+.dark .tabbar {
+  background: #1e1e1e;
+}
+
+.tabbar button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 14px;
+}
+
+.tabbar button.active {
+  color: green;
+  font-weight: bold;
+}
+
+.page {
+  display: none;
+  padding-bottom: 60px;
+}
+
+.activePage {
+  display: block;
+}
+
+.toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.dark .toggle {
+  background: #333;
+  color: white;
+}
+
+@keyframes fade {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
 </head>
 
-<body style="font-family:sans-serif; margin:0;">
+<body>
 
-<div style="background:green; color:white; padding:15px; text-align:center;">
-  <h2>QUVVATHUL ISLAM HSS MADRASA PALLAPPADI</h2>
-  <h1>أُسْوَةٌ حَسَنَةٌ</h1>
-  <p>MEELAD FEST 2K26</p>
+<div class="header">
+  <h3>QUVVATHUL ISLAM MADRASA</h3>
+  <h2>Uswathun Hasanah</h2>
+  <div class="toggle" onclick="toggleDark()">🌙</div>
 </div>
 
-<div style="background:#eee; padding:10px; text-align:center;">
-  <a href="#home">Home</a> |
-  <a href="#result">Result</a> |
-  <a href="#team">Team Points</a>
+<!-- HOME -->
+<div id="home" class="page activePage">
+  <div class="card">
+    <h3>Registration</h3>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScEwSrj08sc8hA5KrerkanxRiJSl0HCpL6pT0FYSdgfK-71EQ/viewform?usp=dialog" target="_blank">
+      <button class="main">Register Now</button>
+    </a>
+  </div>
 </div>
 
-<div id="home" style="padding:20px; text-align:center;">
-  <h2>Registration</h2>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLScEwSrj08sc8hA5KrerkanxRiJSl0HCpL6pT0FYSdgfK-71EQ/viewform?usp=dialog" target="_blank">
-    <button style="padding:10px 20px; background:green; color:white;">
-      Register Now
-    </button>
-  </a>
+<!-- RESULT -->
+<div id="result" class="page">
+  <h3 style="padding-left:15px;">Results</h3>
+  <div id="resultList"></div>
 </div>
 
-<div id="result" style="padding:20px;">
-  <h2>Results</h2>
-  <table border="1" width="100%" id="resultTable">
-    <tr>
-      <th>Chest No</th>
-      <th>Name</th>
-      <th>Program</th>
-      <th>Position</th>
-      <th>Team</th>
-    </tr>
-  </table>
+<!-- TEAM -->
+<div id="team" class="page">
+  <h3 style="padding-left:15px;">Team Points</h3>
+  <div id="teamList"></div>
 </div>
 
-<div id="team" style="padding:20px;">
-  <h2>Team Points</h2>
-  <table border="1" width="100%" id="teamTable">
-    <tr>
-      <th>Team</th>
-      <th>Points</th>
-    </tr>
-  </table>
+<!-- TAB -->
+<div class="tabbar">
+  <button onclick="showPage('home')" class="active">🏠 Home</button>
+  <button onclick="showPage('result')">🏆 Result</button>
+  <button onclick="showPage('team')">👥 Team</button>
 </div>
 
 <script>
 
 let sheetID = "1n8Vwa0R-e8pyM5i4TkWrfmCRB8x7vlBm8HTFHtiAH7A";
 
-// Result fetch
+// Tab switch
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('activePage'));
+  document.getElementById(page).classList.add('activePage');
+
+  document.querySelectorAll('.tabbar button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Dark mode
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
+// Result data
 fetch(`https://opensheet.elk.sh/${sheetID}/Result`)
 .then(res => res.json())
 .then(data => {
-  let table = document.getElementById("resultTable");
+  let div = document.getElementById("resultList");
   data.forEach(item => {
-    table.innerHTML += `
-      <tr>
-        <td>${item["Chest Number"]}</td>
-        <td>${item["Name"]}</td>
-        <td>${item["Program"]}</td>
-        <td>${item["Position"]}</td>
-        <td>${item["Team"]}</td>
-      </tr>`;
+    div.innerHTML += `
+      <div class="card">
+        <b>${item["Name"]}</b><br>
+        ${item["Program"]}<br>
+        🏅 ${item["Position"]}<br>
+        👥 ${item["Team"]}
+      </div>`;
   });
 });
 
-// Team fetch
+// Team data
 fetch(`https://opensheet.elk.sh/${sheetID}/Team`)
 .then(res => res.json())
 .then(data => {
-  let table = document.getElementById("teamTable");
+  let div = document.getElementById("teamList");
   data.forEach(item => {
-    table.innerHTML += `
-      <tr>
-        <td>${item["Team"]}</td>
-        <td>${item["Total Points"]}</td>
-      </tr>`;
+    div.innerHTML += `
+      <div class="card">
+        <b>${item["Team"]}</b><br>
+        ⭐ Points: ${item["Total Points"]}
+      </div>`;
   });
 });
 
