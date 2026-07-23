@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Uswathun Hasanah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="font-family:sans-serif; margin:0;">
+
+<div style="background:green; color:white; padding:15px; text-align:center;">
+  <h2>QUVVATHUL ISLAM HSS MADRASA PALLAPPADI</h2>
+  <h1>أُسْوَةٌ حَسَنَةٌ</h1>
+  <p>MEELAD FEST 2K26</p>
+</div>
+
+<div style="background:#eee; padding:10px; text-align:center;">
+  <a href="#home">Home</a> |
+  <a href="#result">Result</a> |
+  <a href="#team">Team Points</a>
+</div>
+
+<div id="home" style="padding:20px; text-align:center;">
+  <h2>Registration</h2>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLScEwSrj08sc8hA5KrerkanxRiJSl0HCpL6pT0FYSdgfK-71EQ/viewform?usp=dialog" target="_blank">
+    <button style="padding:10px 20px; background:green; color:white;">
+      Register Now
+    </button>
+  </a>
+</div>
+
+<div id="result" style="padding:20px;">
+  <h2>Results</h2>
+  <table border="1" width="100%" id="resultTable">
+    <tr>
+      <th>Chest No</th>
+      <th>Name</th>
+      <th>Program</th>
+      <th>Position</th>
+      <th>Team</th>
+    </tr>
+  </table>
+</div>
+
+<div id="team" style="padding:20px;">
+  <h2>Team Points</h2>
+  <table border="1" width="100%" id="teamTable">
+    <tr>
+      <th>Team</th>
+      <th>Points</th>
+    </tr>
+  </table>
+</div>
+
+<script>
+
+let sheetID = "1n8Vwa0R-e8pyM5i4TkWrfmCRB8x7vlBm8HTFHtiAH7A";
+
+// Result fetch
+fetch(`https://opensheet.elk.sh/${sheetID}/Result`)
+.then(res => res.json())
+.then(data => {
+  let table = document.getElementById("resultTable");
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item["Chest Number"]}</td>
+        <td>${item["Name"]}</td>
+        <td>${item["Program"]}</td>
+        <td>${item["Position"]}</td>
+        <td>${item["Team"]}</td>
+      </tr>`;
+  });
+});
+
+// Team fetch
+fetch(`https://opensheet.elk.sh/${sheetID}/Team`)
+.then(res => res.json())
+.then(data => {
+  let table = document.getElementById("teamTable");
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item["Team"]}</td>
+        <td>${item["Total Points"]}</td>
+      </tr>`;
+  });
+});
+
+</script>
+
+</body>
+</html>
